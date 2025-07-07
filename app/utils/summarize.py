@@ -12,19 +12,43 @@ def summarize_contract(text: str, max_length: int = 1500) -> Optional[str]:
     """
     MVP contract summarizer with risk highlighting.
     Returns None if summarization fails.
+
     """
-    prompt = f"""Analyze this legal contract and provide:
-    1. A 3-5 sentence plain English summary
-    2. List of 3-5 most risky/unfair clauses 
-    3. Page numbers where risks occur (if detectable)
     
-    Focus on:
-    - Automatic renewals
+    prompt = f"""
+    **Analyze this legal contract and provide structured output:**
+
+    **Contract Excerpt:** {text[:15000]}
+
+    **Required Output Format:**
+
+    1. **Summary** (Plain English):
+    - [3-5 sentence overview of key terms]
+
+    2. **Key Risks** (Prioritized):
+    - [Risk 1]: [Description] (Page [X] if detectable)
+    - [Risk 2]: [Description] (Page [Y] if detectable)
+    - [Risk 3]: [Description] (Page [Z] if detectable)
+
+    3. **Action Items**:
+     - [Recommended action 1]
+     - [Recommended action 2]
+
+    **Focus Areas:**
+    - Automatic renewal clauses
     - Liability limitations
     - Termination penalties
-    - Unilateral modification clauses
-    
-    Contract Text:\n{text[:15000]}"""  # Truncate to avoid token limits
+    - Unilateral modification rights
+    - Unusual payment terms
+    - Jurisdiction/arbitration clauses
+
+    **Rules:**
+    - Use bullet points for clarity
+    - Highlight exact clause wording when possible
+    - If page numbers can't be determined, omit them
+    - Never invent clauses not present in the text
+
+    """
 
     try:
         response = MODEL.generate_content(
