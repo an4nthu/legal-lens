@@ -6,7 +6,7 @@ from typing import Optional
 # Configuration (runs once at startup)
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-MODEL = genai.GenerativeModel("gemini-1.5-flash")
+MODEL = genai.GenerativeModel("gemini-2.0-flash")
 
 def summarize_contract(text: str, max_length: int = 1500) -> Optional[str]:
     """
@@ -14,7 +14,7 @@ def summarize_contract(text: str, max_length: int = 1500) -> Optional[str]:
     Returns None if summarization fails.
 
     """
-    
+
     prompt = f"""
     **Analyze this legal contract and provide structured output:**
 

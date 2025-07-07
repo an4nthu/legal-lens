@@ -1,8 +1,10 @@
 from fastapi import FastAPI, UploadFile, HTTPException, File
 import shutil
 import os
-from utils.pdf_parser import extract_text_from_pdf # Import the PDF text extraction function
+from utils.pdf_parser import extract_text_from_pdf 
 from utils.summarize import summarize_contract
+from utils.risk_scorer import score_contract_risk
+
 
 
 # This block allows running the FastAPI app directly with 'python main.py'
@@ -29,6 +31,8 @@ async def upload_file(file: UploadFile = File(...)): # Expect an uploaded file n
     
     extracted_text = extract_text_from_pdf(file_location) # Extract text from the saved PDF using the utility function
     summary = summarize_contract(extracted_text) #summarize the extracted test using utility function
+    risk_score = score_contract_risk(extracted_text) #generate a risk score using utility function  
+
 
 
     os.unlink(file_location) # Delete the temporary PDF file after extraction
@@ -38,5 +42,6 @@ async def upload_file(file: UploadFile = File(...)): # Expect an uploaded file n
         "filename": file.filename,
         "extracted_text": extracted_text[:500], # Slice to get only the first 500 characters
         "text_length": len(extracted_text),
-        "summary": summary
+        "summary": summary,
+        "risk_score": risk_score
     }
